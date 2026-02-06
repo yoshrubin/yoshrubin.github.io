@@ -1,0 +1,33 @@
+name: Quality checks
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  lint-and-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: HTML validation
+        run: npx --yes html-validate index.html
+
+      - name: Start local server
+        run: |
+          python3 -m http.server 4173 &
+          sleep 2
+
+      - name: Lighthouse report
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://localhost:4173/
+          uploadArtifacts: true
+          temporaryPublicStorage: true

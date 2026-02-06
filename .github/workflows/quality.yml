@@ -24,10 +24,21 @@ jobs:
           python3 -m http.server 4173 &
           sleep 2
 
-      - name: Lighthouse report
-        uses: treosh/lighthouse-ci-action@v12
+      - name: Lighthouse (mobile)
+        run: |
+          npx --yes lighthouse http://localhost:4173/ \
+            --output=html --output-path=./lighthouse-mobile.html
+
+      - name: Lighthouse (desktop)
+        run: |
+          npx --yes lighthouse http://localhost:4173/ \
+            --preset=desktop \
+            --output=html --output-path=./lighthouse-desktop.html
+
+      - name: Upload Lighthouse reports
+        uses: actions/upload-artifact@v4
         with:
-          urls: |
-            http://localhost:4173/
-          uploadArtifacts: true
-          temporaryPublicStorage: true
+          name: lighthouse-reports
+          path: |
+            lighthouse-mobile.html
+            lighthouse-desktop.html

@@ -1,0 +1,44 @@
+name: Quality checks
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  lint-and-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: HTML validation
+        run: npx --yes html-validate index.html
+
+      - name: Start local server
+        run: |
+          python3 -m http.server 4173 &
+          sleep 2
+
+      - name: Lighthouse (mobile)
+        run: |
+          npx --yes lighthouse http://localhost:4173/ \
+            --output=html --output-path=./lighthouse-mobile.html
+
+      - name: Lighthouse (desktop)
+        run: |
+          npx --yes lighthouse http://localhost:4173/ \
+            --preset=desktop \
+            --output=html --output-path=./lighthouse-desktop.html
+
+      - name: Upload Lighthouse reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: |
+            lighthouse-mobile.html
+            lighthouse-desktop.html

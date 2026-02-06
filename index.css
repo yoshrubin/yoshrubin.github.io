@@ -210,6 +210,10 @@ h2 {
     opacity: 0.95;
 }
 
+:root[data-theme="dark"] .link.resume img {
+    filter: invert(1) brightness(2.6) contrast(1.2);
+}
+
 .link-text {
     display: flex;
     flex-direction: column;

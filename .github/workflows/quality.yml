@@ -19,6 +19,10 @@ jobs:
       - name: HTML validation
         run: npx --yes html-validate index.html
 
+      - name: Setup Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+
       - name: Start local server
         run: |
           python3 -m http.server 4173 &
@@ -27,11 +31,13 @@ jobs:
       - name: Lighthouse (mobile)
         run: |
           npx --yes lighthouse http://localhost:4173/ \
+            --chrome-path="${{ steps.chrome.outputs.chrome-path }}" \
             --output=html --output-path=./lighthouse-mobile.html
 
       - name: Lighthouse (desktop)
         run: |
           npx --yes lighthouse http://localhost:4173/ \
+            --chrome-path="${{ steps.chrome.outputs.chrome-path }}" \
             --preset=desktop \
             --output=html --output-path=./lighthouse-desktop.html
 

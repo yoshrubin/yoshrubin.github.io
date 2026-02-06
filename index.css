@@ -199,6 +199,10 @@ h2 {
     height: 20px;
 }
 
+:root[data-theme="dark"] .link-icon img {
+    filter: brightness(0) invert(1);
+}
+
 .link-text {
     display: flex;
     flex-direction: column;

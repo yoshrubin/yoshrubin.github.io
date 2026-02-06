@@ -211,7 +211,7 @@ h2 {
 }
 
 :root[data-theme="dark"] .link.resume img {
-    filter: invert(1) brightness(2.6) contrast(1.2);
+    filter: brightness(0) invert(1) saturate(0);
 }
 
 .link-text {

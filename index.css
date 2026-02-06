@@ -200,12 +200,14 @@ h2 {
 }
 
 :root[data-theme="dark"] .link-icon {
-    background: #0f172a;
+    background: #1e293b;
     border: 1px solid #334155;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 :root[data-theme="dark"] .link-icon img {
-    filter: invert(1) brightness(1.3) contrast(1.1);
+    filter: invert(1) brightness(2.4) contrast(1.2);
+    opacity: 0.95;
 }
 
 .link-text {

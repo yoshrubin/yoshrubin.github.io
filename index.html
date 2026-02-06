@@ -13,6 +13,10 @@
     </head>
     <body>
         <main class="page">
+            <button class="theme-toggle" type="button" aria-label="Toggle dark mode">
+                <span class="toggle-icon" aria-hidden="true">☀️</span>
+                <span class="toggle-text">Light</span>
+            </button>
             <header class="hero">
                 <div class="hero-top">
                     <span class="pill">Yoshi Rubin</span>
@@ -157,5 +161,37 @@
                 <span>Made with care in Jerusalem.</span>
             </footer>
         </main>
+        <script>
+            const root = document.documentElement;
+            const toggle = document.querySelector(".theme-toggle");
+            const icon = toggle?.querySelector(".toggle-icon");
+            const text = toggle?.querySelector(".toggle-text");
+
+            const setTheme = (mode) => {
+                if (mode === "dark") {
+                    root.setAttribute("data-theme", "dark");
+                    icon.textContent = "🌙";
+                    text.textContent = "Dark";
+                } else {
+                    root.removeAttribute("data-theme");
+                    icon.textContent = "☀️";
+                    text.textContent = "Light";
+                }
+            };
+
+            const stored = localStorage.getItem("theme");
+            if (stored) {
+                setTheme(stored);
+            } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                setTheme("dark");
+            }
+
+            toggle?.addEventListener("click", () => {
+                const isDark = root.getAttribute("data-theme") === "dark";
+                const next = isDark ? "light" : "dark";
+                localStorage.setItem("theme", next);
+                setTheme(next);
+            });
+        </script>
     </body>
 </html>

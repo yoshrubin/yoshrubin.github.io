@@ -16,8 +16,23 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Detect HTML changes
+        id: html
+        run: |
+          git fetch origin "${{ github.base_ref }}" --depth=1
+          if git diff --name-only FETCH_HEAD...HEAD | grep -q '^index.html$'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: HTML validation
+        if: steps.html.outputs.changed == 'true'
         run: npx --yes html-validate index.html
+
+      - name: Setup Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
 
       - name: Start local server
         run: |
@@ -27,11 +42,15 @@ jobs:
       - name: Lighthouse (mobile)
         run: |
           npx --yes lighthouse http://localhost:4173/ \
+            --chrome-path="${{ steps.chrome.outputs.chrome-path }}" \
+            --chrome-flags="--headless --no-sandbox --disable-gpu --disable-dev-shm-usage" \
             --output=html --output-path=./lighthouse-mobile.html
 
       - name: Lighthouse (desktop)
         run: |
           npx --yes lighthouse http://localhost:4173/ \
+            --chrome-path="${{ steps.chrome.outputs.chrome-path }}" \
+            --chrome-flags="--headless --no-sandbox --disable-gpu --disable-dev-shm-usage" \
             --preset=desktop \
             --output=html --output-path=./lighthouse-desktop.html
 

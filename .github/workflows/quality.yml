@@ -32,12 +32,14 @@ jobs:
         run: |
           npx --yes lighthouse http://localhost:4173/ \
             --chrome-path="${{ steps.chrome.outputs.chrome-path }}" \
+            --chrome-flags="--headless --no-sandbox --disable-gpu --disable-dev-shm-usage" \
             --output=html --output-path=./lighthouse-mobile.html
 
       - name: Lighthouse (desktop)
         run: |
           npx --yes lighthouse http://localhost:4173/ \
             --chrome-path="${{ steps.chrome.outputs.chrome-path }}" \
+            --chrome-flags="--headless --no-sandbox --disable-gpu --disable-dev-shm-usage" \
             --preset=desktop \
             --output=html --output-path=./lighthouse-desktop.html
 

@@ -16,7 +16,18 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Detect HTML changes
+        id: html
+        run: |
+          git fetch origin "${{ github.base_ref }}" --depth=1
+          if git diff --name-only FETCH_HEAD...HEAD | grep -q '^index.html$'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: HTML validation
+        if: steps.html.outputs.changed == 'true'
         run: npx --yes html-validate index.html
 
       - name: Setup Chrome
